@@ -2,6 +2,13 @@
 import pandas as pd
 import numpy as np
 
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import classification_report
+from sklearn.metrics import confusion_matrix
+
+
 # import data
 school_stats = pd.read_csv("school_stats.csv")
 season26_results = pd.read_csv("2026_season_results.csv")
@@ -102,8 +109,8 @@ def remove_cols(stats_list, data_set):
 
     return new_data_set
 
-# stats_list = ["Rk", "W-L%"]
-# print(remove_cols(stats_list, school_stats))
+stats_list = ["Rk", "W-L%"]
+print(remove_cols(stats_list, final_df))
 
 # we need a function that compares just two schools
 def school_comparison(team_A, team_B, data_set, stats_list):
@@ -118,4 +125,27 @@ def school_comparison(team_A, team_B, data_set, stats_list):
 features = [col for col in final_df.columns if col.startswith('Diff_')]
 X = final_df[features]
 y = final_df["Win"]
+
+# split into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=2)
+
+# fit to RandomForestClassifier
+rfc = RandomForestClassifier(random_state=43)
+rfc.fit(X_train, y_train)
+rfc_predicted = rfc.predict(X_test)
+
+# fit to KNeighborsClassifier
+knn = KNeighborsClassifier()
+knn.fit(X_train, y_train)
+knn_predicted = knn.predict(X_test)
+
+# compute the confusion matrixes
+CM_rfc = confusion_matrix(y_test, rfc_predicted)
+CM_knn = confusion_matrix(y_test, knn_predicted)
+
+# # print out reports
+# print(f"Classification report for Random Forest")
+# print(classification_report(y_test, rfc_predicted))
+# print(f"Classification report for K Neighbors")
+# print(classification_report(y_test, knn_predicted))
 

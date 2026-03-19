@@ -9,24 +9,30 @@ from sklearn.metrics import classification_report
 from sklearn.metrics import confusion_matrix
 
 
-############## clean data function #################
-def clean(school_stats_file, season_results_file):
-    # read in data
-    school_stats = pd.read_csv(school_stats_file)
-    season_results = pd.read_csv(season_results_file)
 
+
+def the_model(school_stats_file, season_results_file, stats_list, Team_A, Team_B):
+    """This takes a csv file with school stats and a csv file
+    with season results, as well as a list of stats you want to include
+    in the analysis. It also takes which two teams you want to predict
+    the winner of.
+    It will return the prediction of who will win between team A and team B """
+
+    # read in data
+    school_stats = pd.read_csv("school_stats_file")
+    season_results = pd.read_csv("season_results_file")
+
+    ############ clean data ############
     # remove the redundent column headers
     column_list = season_results.columns.tolist()
     # print(column_list)
     season_results = season_results[~season_results.isin(column_list).any(axis=1)]
 
     # rename the columns to make more sense
-    season_results = season_results.rename(columns={'Visitor/Neutral': "Visitor", 
+    season_results = season_results.rename(columns={'Visitor/Neutral': "Vistor", 
                                                     'PTS': 'PTS_v', 
                                                     'Home/Neutral': 'Home', ''
                                                     'PTS.1': 'PTS_h'})
-    
-    print(season_results.columns)
     
     # remove rows that are missing values in the points columns or missing teams
     season_results = season_results.dropna(subset=['Home', 'Visitor', 'PTS_v', 'PTS_h'])
@@ -36,10 +42,11 @@ def clean(school_stats_file, season_results_file):
     #print(season26_results.dtypes)
     #print(school_stats.dtypes)
 
+
     # change data types to what they should be for season results (school stats is fine)
     season_results = season_results.astype({
         "Date": str,
-        "Visitor": str,
+        "Vistor": str,
         "PTS_v": float,
         "Home": str,
         "PTS_h": float,
@@ -47,17 +54,14 @@ def clean(school_stats_file, season_results_file):
         "Notes": str,
     })
 
-    return school_stats, season_results
+    #################### feature engineering ####################
 
-
-    #################### feature engineering function ####################
-def add_features(school_stats_file, season_results_file, stats_list, Team_H, Team_V):
     # merge school stats and season results
-    # first merge Visitor stats
+    # first merge vistor stats
     merged_df = pd.merge(
-        season_results_file,
+        season_results,
         school_stats_file,
-        left_on='Visitor',
+        left_on='Vistor',
         right_on='School'
     )
 
@@ -76,7 +80,7 @@ def add_features(school_stats_file, season_results_file, stats_list, Team_H, Tea
     # print(final_df.head()
     # print(final_df.columns)
 
-    # calculate if Home team won (1) or if Visitors won (0)
+    # calculate if Home team won (1) or if Vistors won (0)
     final_df["Win"] = (final_df['PTS_h'] > final_df["PTS_v"]).astype(int)
 
 
@@ -84,13 +88,9 @@ def add_features(school_stats_file, season_results_file, stats_list, Team_H, Tea
     final_df = remove_cols(stats_list, final_df)
     
     # compares just two schools
-    comparison_df = school_comparison(Team_H, Team_V, final_df, stats_list)
+    comparison_df = school_comparison(Team_A, Team_B, final_df, stats_list)
 
-    return comparison_df
-
-
-#################### Train and Test ML ####################
-def train_and_test(comparison_df):
+    #################### Train and Test ML ####################
     # only get diff stats to put into training model
     features = [col for col in comparison_df.columns if col.startswith('Diff_')]
     X = comparison_df[features]
@@ -124,21 +124,15 @@ def train_and_test(comparison_df):
 
 
 
-######################### model function for prediction ##################
-def predict_single_game(Team_H, Team_V, school_stats_file, stats_list, model):
-    home_stats = school_stats_file[school_stats_file['School'] == Team_H]
-    visitor_stats = school_stats_file[school_stats_file['School'] == Team_V]
+stats_list = ["Rk", "W-L%", "FG%", "TRB", "TOV", "SOS", "SRS"]
+print(the_model("school_stats.csv", "2026_season_results.csv", stats_list, "Arizona NCAA", "Arizona State"))
 
-    game_data = {}
-    for stat in stats_list:
-        game_data[f'Diff_{stat}'] = home_stats[stat].values[0] - visitor_stats[stat].values[0]
 
-    single_game_df = pd.DataFrame([game_data])
 
-    prediction = model.predict(single_game_df)
-    
-    winner = Team_H if prediction[0] == 1 else Team_V
-    print(f"Prediction: {Team_V} vs {Team_H} -> winner is {winner}")
+
+
+
+
 
 
 
@@ -161,7 +155,7 @@ def remove_cols(stats_list, data_set):
 
 
         # includes these ones are absolutely necessary but aren't stats
-        required_cols = ["Visitor", "Home", "Win"]
+        required_cols = ["Vistor", "Home", "Win"]
         for col in required_cols:
             if col not in new_stats_list:
                 new_stats_list.insert(0, col)
@@ -175,12 +169,9 @@ def remove_cols(stats_list, data_set):
 
 
 
-def school_comparison(Team_H, Team_V, data_set, stats_list):
+def school_comparison(team_A, team_B, data_set, stats_list):
     for stat in stats_list:
         data_set[f'Diff_{stat}'] = data_set[f'{stat}_h'] - data_set[f'{stat}_v']
 
     return data_set
-
-
-
 
