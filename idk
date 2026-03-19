@@ -1,0 +1,27 @@
+# import things
+import pandas as pd
+import numpy as np
+
+# import data
+school_stats = pd.read_csv("school_stats")
+
+# we need to clean the data set
+# remove unnecessary columns
+def remove_cols(keep_list, data_set):
+    """arguments:
+            list: a list of stat column names that you want to keep
+        returns the data set with only those columns remaining """
+    if "School" not in keep_list:
+        keep_list.insert(0, "School")
+
+    new_data_set = data_set[keep_list]
+
+    return new_data_set
+
+# stats_list = ["Rk", "W-L%"]
+# print(remove_cols(stats_list, school_stats))
+
+# we need a function that compares just two schools
+def school_comparison(team_A, team_B, data_set):
+    team_A_data = data_set[data_set["School"] == team_A]
+    team_B_data = data_set[data_set["School"] == team_B]
