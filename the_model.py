@@ -7,6 +7,8 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
 from sklearn.metrics import confusion_matrix
+from sklearn.linear_model import LogisticRegression
+from xgboost import XGBClassifier
 
 
 ############## clean data function #################
@@ -26,7 +28,7 @@ def clean(school_stats_file, season_results_file):
                                                     'Home/Neutral': 'Home', ''
                                                     'PTS.1': 'PTS_h'})
     
-    print(season_results.columns)
+    # print(season_results.columns)
     
     # remove rows that are missing values in the points columns or missing teams
     season_results = season_results.dropna(subset=['Home', 'Visitor', 'PTS_v', 'PTS_h'])
@@ -50,8 +52,8 @@ def clean(school_stats_file, season_results_file):
     return school_stats, season_results
 
 
-    #################### feature engineering function ####################
-def add_features(school_stats_file, season_results_file, stats_list, Team_H, Team_V):
+#################### feature engineering function ####################
+def add_features(school_stats_file, season_results_file, stats_list):
     # merge school stats and season results
     # first merge Visitor stats
     merged_df = pd.merge(
@@ -83,10 +85,12 @@ def add_features(school_stats_file, season_results_file, stats_list, Team_H, Tea
     # remove unnecessary columns
     final_df = remove_cols(stats_list, final_df)
     
-    # compares just two schools
-    comparison_df = school_comparison(Team_H, Team_V, final_df, stats_list)
+    # subtract the home team and visitor teams stats
+    for stat in stats_list:
+        final_df[f'Diff_{stat}'] = final_df[f'{stat}_h'] - final_df[f'{stat}_v']
 
-    return comparison_df
+
+    return final_df
 
 
 #################### Train and Test ML ####################
@@ -99,28 +103,26 @@ def train_and_test(comparison_df):
     # split into training and testing sets
     X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=2)
 
-    # fit to RandomForestClassifier
-    rfc = RandomForestClassifier(random_state=43)
-    rfc.fit(X_train, y_train)
-    rfc_predicted = rfc.predict(X_test)
+    # dictionary of models to try
+    models = {
+        "Random Forest": RandomForestClassifier(random_state=402),
+        "K-Neighbors": KNeighborsClassifier(),
+        "Logistic Regression": LogisticRegression(),
+        "XGBoost": XGBClassifier(use_label_encoder=False, eval_metric='logloss')
+    }
 
-    # fit to KNeighborsClassifier
-    knn = KNeighborsClassifier()
-    knn.fit(X_train, y_train)
-    knn_predicted = knn.predict(X_test)
+    results = {}
 
-    # compute the confusion matrixes
-    CM_rfc = confusion_matrix(y_test, rfc_predicted)
-    CM_knn = confusion_matrix(y_test, knn_predicted)
+    # loop through different models to see which is the best
+    for name, model in models.items():
+        model.fit(X_train, y_train)
+        predictions = model.predict(X_test)
+        print(f"\nClassification report for {name}:")
+        print(classification_report(y_test, predictions))
 
-    # print out reports
-    print(f"Classification report for Random Forest")
-    print(classification_report(y_test, rfc_predicted))
-    print(f"Classification report for K Neighbors")
-    print(classification_report(y_test, knn_predicted))
+        results[name] = model
 
-
-    return rfc_predicted, knn_predicted
+    return results
 
 
 
@@ -173,13 +175,6 @@ def remove_cols(stats_list, data_set):
 # stats_list = ["Rk", "W-L%"]
 #print(remove_cols(stats_list, final_df))
 
-
-
-def school_comparison(Team_H, Team_V, data_set, stats_list):
-    for stat in stats_list:
-        data_set[f'Diff_{stat}'] = data_set[f'{stat}_h'] - data_set[f'{stat}_v']
-
-    return data_set
 
 
 
