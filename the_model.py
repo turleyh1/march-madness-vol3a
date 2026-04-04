@@ -49,11 +49,23 @@ def clean(school_stats_file, season_results_file):
         "Notes": str,
     })
 
+
+    # I need to add in data cleaning for school stats, if the school name is missing remove column
+    # make sure all data type is float besides school name
+
     return school_stats, season_results
 
 
 #################### feature engineering function ####################
 def add_features(school_stats_file, season_results_file, stats_list):
+    # defensive rebound stuff
+    school_stats_file['DRB'] = school_stats_file['TRB'] - school_stats_file['ORB']
+
+    stats_list.remove("TRB")
+    stats_list.remove("ORB")
+    stats_list.append("DRB")
+
+
     # merge school stats and season results
     # first merge Visitor stats
     merged_df = pd.merge(
