@@ -5,14 +5,21 @@ import numpy as np
 from the_model import clean, add_features, train_and_test, simulate_tournament, predict_single_game
 
 def tournament(school_stats_file, season_results_file, stats_list, teams_list):
+    # clean data
     school_stats, season_results = clean(school_stats_file, season_results_file)
+
+    # add in difference and win columns amoung other things
     comparison_df = add_features(school_stats, season_results, stats_list)
-    model = train_and_test(comparison_df)  
+
+    # pick best model
+    model = train_and_test(comparison_df)
+
+    # run through the whole tournament
     simulate_tournament(teams_list, school_stats, stats_list, model)
 
 
 
-
+# lists we are using
 offense_stats = ["Rk", "W-L%", "SOS", "SRS", "FG%", "3P%", "FT%", "ORB", "AST"]
 schedule = [
     "Duke NCAA", "Siena NCAA", "Ohio State NCAA", "Texas Christian NCAA", 

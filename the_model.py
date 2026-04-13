@@ -157,11 +157,12 @@ def simulate_tournament(teams_list, school_stats, stats_list, model):
     current_round_teams = teams_list
     round_number = 1
     
+    # go until there is only one team left
     while len(current_round_teams) > 1:
         print(f"\n--- Round {round_number} ---")
         winners = []
         
-        # Loop through teams 2 at a time (Team 0 vs Team 1, Team 2 vs Team 3, etc.)
+        # loop through teams 2 at a time (Team 0 vs Team 1, Team 2 vs Team 3, etc.)
         for i in range(0, len(current_round_teams), 2):
             team1 = current_round_teams[i]
             team2 = current_round_teams[i+1]
@@ -207,28 +208,31 @@ def remove_cols(stats_list, data_set):
         return new_data_set
 
 def predict_single_game(Team_H, Team_V, school_stats_file, stats_list, model):
+    # get home and visitor stats from lists
     home_stats = school_stats_file[school_stats_file['School'] == Team_H]
     visitor_stats = school_stats_file[school_stats_file['School'] == Team_V]
-
+    
+    # don't do anything if lists are empty for whatever reason
     if home_stats.empty or visitor_stats.empty:
         print(f"Error: Could not find {Team_H if home_stats.empty else Team_V} in stats file.")
         return
 
+    # create difference stats for game data
     game_data = {}
     for stat in stats_list:
         game_data[f'Diff_{stat}'] = home_stats[stat].values[0] - visitor_stats[stat].values[0]
 
     single_game_df = pd.DataFrame([game_data])
     
-    # --- CRITICAL: Match feature order ---
-    # This ensures Diff_ORB isn't swapped with Diff_FG% by accident
+  
+    # keep order the same
     feature_order = [f'Diff_{s}' for s in stats_list]
     single_game_df = single_game_df[feature_order]
 
     prediction = model.predict(single_game_df)
     
-    # Optional: Get probabilities
-    prob = model.predict_proba(single_game_df)[0][1] # Probability Home wins
+    # get the probability that the home team wins or looses
+    prob = model.predict_proba(single_game_df)[0][1] 
 
     winner = Team_H if prediction[0] == 1 else Team_V
     conf = prob if prediction[0] == 1 else (1 - prob)
