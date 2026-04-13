@@ -97,5 +97,5 @@ results = [
 
     ("Connecticut NCAA","Michigan NCAA"),
 
-    ("Michigan NCAA"),
+    ("Michigan NCAA",)
 ]
