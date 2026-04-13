@@ -66,3 +66,36 @@ comparison_df = add_features(school_stats, season_results, offense_stats)
 model = train_and_test(comparison_df)
 # predict_single_game("Duke NCAA", "Siena NCAA", school_stats, offense_stats, model)
 simulate_tournament(schedule, school_stats, offense_stats, model)
+
+# tournament results
+results = [
+    ("Duke NCAA", "Texas Christian NCAA", "St. John's (NY) NCAA", "Kansas NCAA",
+    "Louisville NCAA", "Michigan State NCAA", "UCLA NCAA", "Connecticut NCAA", "Florida NCAA", 
+    "Iowa NCAA", "Vanderbilt NCAA", "Nebraska NCAA",
+    "Virginia Commonwealth NCAA", "Illinois NCAA","Texas A&M NCAA", "Houston NCAA",
+    "Arizona NCAA", "Utah State NCAA", "High Point NCAA", "Arkansas NCAA",
+    "Texas NCAA", "Gonzaga NCAA", "Miami (FL) NCAA", "Purdue NCAA", "Michigan NCAA", 
+    "Saint Louis NCAA", "Texas Tech NCAA","Alabama NCAA", "Tennessee NCAA",
+    "Virginia NCAA", "Kentucky NCAA","Iowa State NCAA"), 
+
+    ("Duke NCAA", "St. John's (NY) NCAA",
+    "Michigan State NCAA","Connecticut NCAA",
+    "Iowa NCAA","Nebraska NCAA",
+    "Illinois NCAA","Houston NCAA",
+    "Arizona NCAA", "Arkansas NCAA",
+    "Texas NCAA", "Purdue NCAA", 
+    "Michigan NCAA", "Alabama NCAA", 
+    "Tennessee NCAA","Iowa State NCAA"),
+
+    ("Duke NCAA","Connecticut NCAA",
+    "Iowa NCAA","Illinois NCAA",
+    "Arizona NCAA","Purdue NCAA", 
+    "Michigan NCAA","Tennessee NCAA"),
+
+    ("Connecticut NCAA","Illinois NCAA",
+    "Arizona NCAA","Michigan NCAA"),
+
+    ("Connecticut NCAA","Michigan NCAA"),
+
+    ("Michigan NCAA"),
+]
