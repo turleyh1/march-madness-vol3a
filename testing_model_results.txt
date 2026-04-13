@@ -41,7 +41,52 @@ Classification report for XGBoost:
    macro avg       0.67      0.67      0.67       570
 weighted avg       0.69      0.69      0.69       570
 
+### Increased max_iter on Logistic and scaled the data for KNN and Logistic
 
+Classification report for Random Forest:
+              precision    recall  f1-score   support
+
+           0       0.62      0.57      0.60       225
+           1       0.74      0.77      0.75       345
+
+    accuracy                           0.69       570
+   macro avg       0.68      0.67      0.68       570
+weighted avg       0.69      0.69      0.69       570
+
+
+Classification report for K-Neighbors:
+              precision    recall  f1-score   support
+
+           0       0.60      0.56      0.58       225
+           1       0.72      0.76      0.74       345
+
+    accuracy                           0.68       570
+   macro avg       0.66      0.66      0.66       570
+weighted avg       0.68      0.68      0.68       570
+
+
+Classification report for Logistic Regression:
+              precision    recall  f1-score   support
+
+           0       0.64      0.55      0.59       225
+           1       0.73      0.79      0.76       345
+
+    accuracy                           0.70       570
+   macro avg       0.68      0.67      0.68       570
+weighted avg       0.69      0.70      0.69       570
+
+
+Classification report for XGBoost:
+              precision    recall  f1-score   support
+
+           0       0.61      0.58      0.59       225
+           1       0.73      0.76      0.75       345
+
+    accuracy                           0.69       570
+   macro avg       0.67      0.67      0.67       570
+weighted avg       0.69      0.69      0.69       570
+
+* so it looks like KNN improved a lot with that, but none of the others
 
 
 
@@ -95,6 +140,54 @@ Classification report for XGBoost:
 weighted avg       0.68      0.69      0.69       570
 
 
+### Increased max_iter on Logistic and scaled the data for KNN and Logistic
+
+Classification report for Random Forest:
+              precision    recall  f1-score   support
+
+           0       0.60      0.53      0.57       225
+           1       0.72      0.77      0.74       345
+
+    accuracy                           0.68       570
+   macro avg       0.66      0.65      0.65       570
+weighted avg       0.67      0.68      0.67       570
+
+
+Classification report for K-Neighbors:
+              precision    recall  f1-score   support
+
+           0       0.57      0.56      0.56       225
+           1       0.71      0.72      0.72       345
+
+    accuracy                           0.66       570
+   macro avg       0.64      0.64      0.64       570
+weighted avg       0.66      0.66      0.66       570
+
+
+Classification report for Logistic Regression:
+              precision    recall  f1-score   support
+
+           0       0.64      0.55      0.59       225
+           1       0.73      0.80      0.76       345
+
+    accuracy                           0.70       570
+   macro avg       0.68      0.67      0.68       570
+weighted avg       0.69      0.70      0.69       570
+
+
+Classification report for XGBoost:
+              precision    recall  f1-score   support
+
+           0       0.58      0.57      0.58       225
+           1       0.72      0.74      0.73       345
+
+    accuracy                           0.67       570
+   macro avg       0.65      0.65      0.65       570
+weighted avg       0.67      0.67      0.67       570
+
+* so it looks like they all got worse with those changes
+
+
 
 
 ###############################################################################################
@@ -144,7 +237,53 @@ Classification report for XGBoost:
    macro avg       0.70      0.68      0.69       570
 weighted avg       0.71      0.71      0.71       570
 
+### Increased max_iter on Logistic and scaled the data for KNN and Logistic
 
+Classification report for Random Forest:
+              precision    recall  f1-score   support
+
+           0       0.58      0.55      0.56       225
+           1       0.72      0.74      0.73       345
+
+    accuracy                           0.67       570
+   macro avg       0.65      0.65      0.65       570
+weighted avg       0.66      0.67      0.66       570
+
+
+Classification report for K-Neighbors:
+              precision    recall  f1-score   support
+
+           0       0.55      0.52      0.54       225
+           1       0.70      0.72      0.71       345
+
+    accuracy                           0.65       570
+   macro avg       0.63      0.62      0.63       570
+weighted avg       0.64      0.65      0.64       570
+
+
+Classification report for Logistic Regression:
+              precision    recall  f1-score   support
+
+           0       0.64      0.53      0.58       225
+           1       0.72      0.81      0.76       345
+
+    accuracy                           0.70       570
+   macro avg       0.68      0.67      0.67       570
+weighted avg       0.69      0.70      0.69       570
+
+
+Classification report for XGBoost:
+              precision    recall  f1-score   support
+
+           0       0.61      0.59      0.60       225
+           1       0.74      0.75      0.74       345
+
+    accuracy                           0.69       570
+   macro avg       0.67      0.67      0.67       570
+weighted avg       0.68      0.69      0.69       570
+
+
+* so it looks like KNN and XGBoost improved with these changes
 
 
 #####################################################################################################################
@@ -192,3 +331,51 @@ Classification report for XGBoost:
     accuracy                           0.67       570
    macro avg       0.65      0.65      0.65       570
 weighted avg       0.67      0.67      0.67       570
+
+### Increased max_iter on Logistic and scaled the data for KNN and Logistic
+
+Classification report for Random Forest:
+              precision    recall  f1-score   support
+
+           0       0.63      0.58      0.60       225
+           1       0.74      0.78      0.76       345
+
+    accuracy                           0.70       570
+   macro avg       0.68      0.68      0.68       570
+weighted avg       0.69      0.70      0.70       570
+
+
+Classification report for K-Neighbors:
+              precision    recall  f1-score   support
+
+           0       0.52      0.48      0.50       225
+           1       0.68      0.71      0.69       345
+
+    accuracy                           0.62       570
+   macro avg       0.60      0.59      0.60       570
+weighted avg       0.61      0.62      0.62       570
+
+
+Classification report for Logistic Regression:
+              precision    recall  f1-score   support
+
+           0       0.64      0.54      0.58       225
+           1       0.73      0.80      0.76       345
+
+    accuracy                           0.70       570
+   macro avg       0.68      0.67      0.67       570
+weighted avg       0.69      0.70      0.69       570
+
+
+Classification report for XGBoost:
+              precision    recall  f1-score   support
+
+           0       0.59      0.54      0.56       225
+           1       0.72      0.75      0.73       345
+
+    accuracy                           0.67       570
+   macro avg       0.65      0.65      0.65       570
+weighted avg       0.67      0.67      0.67       570
+
+
+* KNN improved and so did Logistic with the changes

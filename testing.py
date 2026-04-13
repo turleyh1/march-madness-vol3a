@@ -11,7 +11,7 @@ from sklearn.metrics import classification_report
 from sklearn.metrics import confusion_matrix
 
 school_stats, season_results = clean("school_stats.csv", "2026_season_results.csv")
-basic_stats_list = ["Rk", "W-L%", "FG%", "TRB", "TOV", "SOS", "SRS"]
+basic_stats = ["Rk", "W-L%", "FG%", "TRB", "TOV", "SOS", "SRS"]
 
 
 
@@ -43,6 +43,6 @@ will want to seperate them."""
 # could also look at home vs away stats 
 
 
-comparison_df = add_features(school_stats, season_results, defense_stats)
+comparison_df = add_features(school_stats, season_results, well_rounded_stats)
 results = train_and_test(comparison_df)
 # print(results)

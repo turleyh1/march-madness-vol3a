@@ -9,6 +9,8 @@ from sklearn.metrics import classification_report
 from sklearn.metrics import confusion_matrix
 from sklearn.linear_model import LogisticRegression
 from xgboost import XGBClassifier
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
 
 
 ############## clean data function #################
@@ -58,12 +60,12 @@ def clean(school_stats_file, season_results_file):
 
 #################### feature engineering function ####################
 def add_features(school_stats_file, season_results_file, stats_list):
-    # defensive rebound stuff
-    school_stats_file['DRB'] = school_stats_file['TRB'] - school_stats_file['ORB']
+    # # defensive rebound stuff
+    # school_stats_file['DRB'] = school_stats_file['TRB'] - school_stats_file['ORB']
 
-    stats_list.remove("TRB")
-    stats_list.remove("ORB")
-    stats_list.append("DRB")
+    # stats_list.remove("TRB")
+    # stats_list.remove("ORB")
+    # stats_list.append("DRB")
 
 
     # merge school stats and season results
@@ -118,9 +120,9 @@ def train_and_test(comparison_df):
     # dictionary of models to try
     models = {
         "Random Forest": RandomForestClassifier(random_state=402),
-        "K-Neighbors": KNeighborsClassifier(),
-        "Logistic Regression": LogisticRegression(),
-        "XGBoost": XGBClassifier(use_label_encoder=False, eval_metric='logloss')
+        "K-Neighbors": make_pipeline(StandardScaler(), KNeighborsClassifier()),
+        "Logistic Regression": make_pipeline(StandardScaler(), LogisticRegression(max_iter=1000)),
+        "XGBoost": XGBClassifier(eval_metric='logloss')
     }
 
     results = {}
