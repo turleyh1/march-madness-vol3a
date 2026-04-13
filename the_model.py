@@ -11,6 +11,7 @@ from sklearn.linear_model import LogisticRegression
 from xgboost import XGBClassifier
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import accuracy_score
 
 
 ############## clean data function #################
@@ -126,36 +127,55 @@ def train_and_test(comparison_df):
     }
 
     results = {}
+    best_score = 0
+    best_name = None
 
     # loop through different models to see which is the best
     for name, model in models.items():
         model.fit(X_train, y_train)
         predictions = model.predict(X_test)
-        print(f"\nClassification report for {name}:")
-        print(classification_report(y_test, predictions))
+        # print(f"\nClassification report for {name}:")
+        # print(classification_report(y_test, predictions))
+
+        # calculate score
+        score = accuracy_score(y_test, predictions)
 
         results[name] = model
 
-    return results
+        # find best model
+        if score > best_score:
+            best_score = best_score
+            best_name = name
+
+    return results[best_name]
 
 
 
-######################### model function for prediction ##################
-def predict_single_game(Team_H, Team_V, school_stats_file, stats_list, model):
-    home_stats = school_stats_file[school_stats_file['School'] == Team_H]
-    visitor_stats = school_stats_file[school_stats_file['School'] == Team_V]
 
-    game_data = {}
-    for stat in stats_list:
-        game_data[f'Diff_{stat}'] = home_stats[stat].values[0] - visitor_stats[stat].values[0]
-
-    single_game_df = pd.DataFrame([game_data])
-
-    prediction = model.predict(single_game_df)
+################### Predict Whole Tournament #############################
+def simulate_tournament(teams_list, school_stats, stats_list, model):
+    current_round_teams = teams_list
+    round_number = 1
     
-    winner = Team_H if prediction[0] == 1 else Team_V
-    print(f"Prediction: {Team_V} vs {Team_H} -> winner is {winner}")
-
+    while len(current_round_teams) > 1:
+        print(f"\n--- Round {round_number} ---")
+        winners = []
+        
+        # Loop through teams 2 at a time (Team 0 vs Team 1, Team 2 vs Team 3, etc.)
+        for i in range(0, len(current_round_teams), 2):
+            team1 = current_round_teams[i]
+            team2 = current_round_teams[i+1]
+            
+            winner = predict_single_game(team1, team2, school_stats, stats_list, model)
+            print(f"{team1} vs {team2} -> Winner: {winner}")
+            winners.append(winner)
+        
+        # The winners of this round become the players for the next round
+        current_round_teams = winners
+        round_number += 1
+        
+    print(f"\n🏆 TOURNAMENT CHAMPION: {current_round_teams[0]} 🏆")
+    return current_round_teams[0]
 
 
 
@@ -186,8 +206,36 @@ def remove_cols(stats_list, data_set):
 
         return new_data_set
 
-# stats_list = ["Rk", "W-L%"]
-#print(remove_cols(stats_list, final_df))
+def predict_single_game(Team_H, Team_V, school_stats_file, stats_list, model):
+    home_stats = school_stats_file[school_stats_file['School'] == Team_H]
+    visitor_stats = school_stats_file[school_stats_file['School'] == Team_V]
+
+    if home_stats.empty or visitor_stats.empty:
+        print(f"Error: Could not find {Team_H if home_stats.empty else Team_V} in stats file.")
+        return
+
+    game_data = {}
+    for stat in stats_list:
+        game_data[f'Diff_{stat}'] = home_stats[stat].values[0] - visitor_stats[stat].values[0]
+
+    single_game_df = pd.DataFrame([game_data])
+    
+    # --- CRITICAL: Match feature order ---
+    # This ensures Diff_ORB isn't swapped with Diff_FG% by accident
+    feature_order = [f'Diff_{s}' for s in stats_list]
+    single_game_df = single_game_df[feature_order]
+
+    prediction = model.predict(single_game_df)
+    
+    # Optional: Get probabilities
+    prob = model.predict_proba(single_game_df)[0][1] # Probability Home wins
+
+    winner = Team_H if prediction[0] == 1 else Team_V
+    conf = prob if prediction[0] == 1 else (1 - prob)
+    
+    # print(f"Prediction: {Team_V} @ {Team_H} -> Winner: {winner} ({conf:.1%} confidence)")
+    
+    return winner
 
 
 
