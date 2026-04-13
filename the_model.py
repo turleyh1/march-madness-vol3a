@@ -224,7 +224,7 @@ def predict_single_game(Team_H, Team_V, school_stats_file, stats_list, model):
 
     single_game_df = pd.DataFrame([game_data])
     
-  
+
     # keep order the same
     feature_order = [f'Diff_{s}' for s in stats_list]
     single_game_df = single_game_df[feature_order]
