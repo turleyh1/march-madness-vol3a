@@ -23,7 +23,7 @@ print("Training model...")
 model = train_and_test(final_df)
 
 # Get teams from school_stats (first 8 teams for tournament)
-my_teams = school_stats['School'].head(8).tolist()
+my_teams = school_stats['School'].head(64).tolist()
 
 print(f"\nTeams loaded for tournament: {len(my_teams)}")
 print(f"Teams: {', '.join(my_teams)}")
