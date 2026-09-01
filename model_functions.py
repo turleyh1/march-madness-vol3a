@@ -186,9 +186,11 @@ def simulate_tournament(teams_list, school_stats, stats_list, model):
     round_number = 1
     bracket_history = []  # <--- New list to store all match data
     
+    # go until there is only one team left
     while len(current_round_teams) > 1:
         winners = []
         
+        # loop through teams 2 at a time (Team 0 vs Team 1, Team 2 vs Team 3, etc.)
         for i in range(0, len(current_round_teams), 2):
             team1 = current_round_teams[i]
             team2 = current_round_teams[i+1]
@@ -205,6 +207,7 @@ def simulate_tournament(teams_list, school_stats, stats_list, model):
             
             winners.append(winner)
         
+        # The winners of this round become the players for the next round
         current_round_teams = winners
         round_number += 1
         
