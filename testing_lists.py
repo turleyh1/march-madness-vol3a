@@ -2,7 +2,7 @@
 import pandas as pd
 import numpy as np
 
-from the_model import clean, add_features, train_and_test, predict_single_game, simulate_tournament
+from model_functions import clean, add_features, train_and_test, predict_single_game, simulate_tournament
 
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.neighbors import KNeighborsClassifier
@@ -34,7 +34,7 @@ well_rounded_stats = ["Rk", "W-L%", "SOS", "SRS", "FG%", "3P%", "FT%", "TRB", "A
 now I don't care about whether it was offensive or defensive since we are combining them, but maybe later I 
 will want to seperate them."""
 
-# kyles thoughts
+# kyles thoughts (my brother)
 # ORB for winning, TOV for losing (compare aginst each other)
 # avg possesion time (so do schools that use the whole shot clock do better?)
 # second chance points (% conversion on second chance points)
@@ -67,7 +67,7 @@ model = train_and_test(comparison_df)
 # predict_single_game("Duke NCAA", "Siena NCAA", school_stats, offense_stats, model)
 simulate_tournament(schedule, school_stats, offense_stats, model)
 
-# tournament results
+# actual tournament results
 results = [
     ("Duke NCAA", "Texas Christian NCAA", "St. John's (NY) NCAA", "Kansas NCAA",
     "Louisville NCAA", "Michigan State NCAA", "UCLA NCAA", "Connecticut NCAA", "Florida NCAA", 
