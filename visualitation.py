@@ -1,5 +1,5 @@
 # visualitation.py - Fixed for special characters in team names
-from the_model2 import clean, add_features, train_and_test, simulate_tournament, predict_single_game
+from model_functions import clean, add_features, train_and_test, simulate_tournament, predict_single_game
 from graphviz import Digraph
 import pandas as pd
 import math
