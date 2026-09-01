@@ -2,7 +2,7 @@
 import pandas as pd
 import numpy as np
 
-from the_model import clean, add_features, train_and_test, simulate_tournament, predict_single_game
+from model_functions import clean, add_features, train_and_test, simulate_tournament, predict_single_game
 
 def tournament(school_stats_file, season_results_file, stats_list, teams_list):
     # clean data
