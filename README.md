@@ -13,3 +13,18 @@ and we put all of these functions were placed in the file called ***model_functi
 Everything was combined into ***get_predictions***. This file can be run to give you the predicted results of the tournament.
 
 We then decided to add some visualization to show the results in a classic bracket format and this was done in ***visualization***
+
+
+
+
+How to run and read results:
+
+***visualization*** has all the necessary code, so just run that one. 
+
+Green = correct two teams played each other, and the correct team was predicted to win
+
+Red = correct two teams played each other, and the wrong team was predicted to win
+
+Yellow = wrong teams played each other, but the correct team was predicted to win
+
+Orange = wrong teams played each other, and the wrong team was predicted to win
