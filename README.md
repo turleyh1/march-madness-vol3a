@@ -17,7 +17,7 @@ We then decided to add some visualization to show the results in a classic brack
 
 
 
-How to run and read results:
+# How to run and read results:
 
 ***visualization*** has all the necessary code, so just run that one. 
 
